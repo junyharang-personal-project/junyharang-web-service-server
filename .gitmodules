@@ -1,0 +1,9 @@
+[submodule "build-config"]
+	path = build-config
+	url = https://github.com/junyharang-personal-project/junyharang-web-service-server-private-Build-Config.git
+[submodule "application-config"]
+	path = application-config
+	url = https://github.com/junyharang-personal-project/junyharang-web-service-server-private-Envirment-Config.git
+[submodule "jenkins-config"]
+	path = jenkins-config
+	url = https://github.com/junyharang-personal-project/junyharang-web-service-server-private-Jenkins-Config.git

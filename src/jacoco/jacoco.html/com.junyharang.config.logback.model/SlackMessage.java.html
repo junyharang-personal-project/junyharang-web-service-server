@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SlackMessage.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JunyHarang</a> &gt; <a href="index.source.html" class="el_package">com.junyharang.config.logback.model</a> &gt; <span class="el_source">SlackMessage.java</span></div><h1>SlackMessage.java</h1><pre class="source lang-java linenums">package com.junyharang.config.logback.model;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+@Setter
+public class SlackMessage {
+
+    private static final String CHANNEL = &quot;channel&quot;;
+    private static final String USERNAME = &quot;username&quot;;
+    private static final String HTTP = &quot;http&quot;;
+    private static final String ICON_URL = &quot;icon_url&quot;;
+    private static final String ICON_EMOJI = &quot;icon_emoji&quot;;
+    private static final String UNFURL_MEDIA = &quot;unfurl_media&quot;;
+    private static final String UNFURL_LINKS = &quot;unfurl_links&quot;;
+    private static final String TEXT = &quot;text&quot;;
+    private static final String ATTACHMENTS = &quot;attachments&quot;;
+    private static final String LINK_NAMES = &quot;link_names&quot;;
+
+<span class="nc" id="L25">    private List&lt;SlackAttachment&gt; attach = new ArrayList&lt;SlackAttachment&gt;();</span>
+<span class="nc" id="L26">    private String channel = null;</span>
+<span class="nc" id="L27">    private String icon = null;</span>
+<span class="nc" id="L28">    private JsonObject slackMessage = new JsonObject();</span>
+
+<span class="nc" id="L30">    private String text = null;</span>
+<span class="nc" id="L31">    private String username = null;</span>
+
+<span class="nc" id="L33">    private boolean unfurlMedia = false;</span>
+<span class="nc" id="L34">    private boolean unfurlLinks = false;</span>
+
+<span class="nc" id="L36">    private boolean linkNames = false;</span>
+
+<span class="nc" id="L38">    public SlackMessage() {</span>
+<span class="nc" id="L39">    }</span>
+
+    public SlackMessage(String text) {
+<span class="nc" id="L42">        this(null, null, text);</span>
+<span class="nc" id="L43">    }</span>
+
+    public SlackMessage(String username, String text) {
+<span class="nc" id="L46">        this(null, username, text);</span>
+<span class="nc" id="L47">    }</span>
+
+<span class="nc" id="L49">    public SlackMessage(String channel, String username, String text) {</span>
+<span class="nc bnc" id="L50" title="All 2 branches missed.">        if (channel != null) {</span>
+<span class="nc" id="L51">            this.channel = channel;</span>
+        }
+
+<span class="nc bnc" id="L54" title="All 2 branches missed.">        if (username != null) {</span>
+<span class="nc" id="L55">            this.username = username;</span>
+        }
+
+<span class="nc" id="L58">        this.text = text;</span>
+<span class="nc" id="L59">    }</span>
+
+    public SlackMessage addAttachments(SlackAttachment attach) {
+<span class="nc" id="L62">        this.attach.add(attach);</span>
+
+<span class="nc" id="L64">        return this;</span>
+    }
+
+    /**
+     * Convert SlackMessage to JSON
+     *
+     * @return JsonObject
+     */
+    public JsonObject prepare() {
+<span class="nc bnc" id="L73" title="All 2 branches missed.">        if (channel != null) {</span>
+<span class="nc" id="L74">            slackMessage.addProperty(CHANNEL, channel);</span>
+        }
+
+<span class="nc bnc" id="L77" title="All 2 branches missed.">        if (username != null) {</span>
+<span class="nc" id="L78">            slackMessage.addProperty(USERNAME, username);</span>
+        }
+
+<span class="nc bnc" id="L81" title="All 2 branches missed.">        if (icon != null) {</span>
+<span class="nc bnc" id="L82" title="All 2 branches missed.">            if (icon.contains(HTTP)) {</span>
+<span class="nc" id="L83">                slackMessage.addProperty(ICON_URL, icon);</span>
+            } else {
+<span class="nc" id="L85">                slackMessage.addProperty(ICON_EMOJI, icon);</span>
+            }
+        }
+
+<span class="nc" id="L89">        slackMessage.addProperty(UNFURL_MEDIA, unfurlMedia);</span>
+<span class="nc" id="L90">        slackMessage.addProperty(UNFURL_LINKS, unfurlLinks);</span>
+<span class="nc" id="L91">        slackMessage.addProperty(LINK_NAMES, linkNames);</span>
+
+<span class="nc bnc" id="L93" title="All 2 branches missed.">        if (text == null) {</span>
+<span class="nc" id="L94">            throw new IllegalArgumentException(&quot;Missing Text field @ SlackMessage&quot;);</span>
+        } else {
+<span class="nc" id="L96">            slackMessage.addProperty(TEXT, text);</span>
+        }
+
+<span class="nc bnc" id="L99" title="All 2 branches missed.">        if (!attach.isEmpty()) {</span>
+<span class="nc" id="L100">            slackMessage.add(ATTACHMENTS, this.prepareAttach());</span>
+        }
+
+<span class="nc" id="L103">        return slackMessage;</span>
+    }
+
+    private JsonArray prepareAttach() {
+<span class="nc" id="L107">        final JsonArray attachs = new JsonArray();</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">        for (SlackAttachment attach : this.attach) {</span>
+<span class="nc" id="L109">            attachs.add(attach.toJson());</span>
+<span class="nc" id="L110">        }</span>
+
+<span class="nc" id="L112">        return attachs;</span>
+    }
+
+    public SlackMessage removeAttachment(int index) {
+<span class="nc" id="L116">        this.attach.remove(index);</span>
+
+<span class="nc" id="L118">        return this;</span>
+    }
+
+    public SlackMessage setText(String message) {
+<span class="nc bnc" id="L122" title="All 2 branches missed.">        if (message != null) {</span>
+<span class="nc" id="L123">            this.text = message;</span>
+        }
+
+<span class="nc" id="L126">        return this;</span>
+    }
+
+    @Override
+    public boolean equals(Object o) {
+<span class="nc bnc" id="L131" title="All 2 branches missed.">        if (this == o)</span>
+<span class="nc" id="L132">            return true;</span>
+<span class="nc bnc" id="L133" title="All 4 branches missed.">        if (o == null || getClass() != o.getClass())</span>
+<span class="nc" id="L134">            return false;</span>
+
+<span class="nc" id="L136">        final SlackMessage that = (SlackMessage) o;</span>
+
+<span class="nc bnc" id="L138" title="All 2 branches missed.">        if (unfurlMedia != that.unfurlMedia)</span>
+<span class="nc" id="L139">            return false;</span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">        if (unfurlLinks != that.unfurlLinks)</span>
+<span class="nc" id="L141">            return false;</span>
+<span class="nc bnc" id="L142" title="All 2 branches missed.">        if (linkNames != that.linkNames)</span>
+<span class="nc" id="L143">            return false;</span>
+<span class="nc bnc" id="L144" title="All 2 branches missed.">        if (!Objects.equals(attach, that.attach))</span>
+<span class="nc" id="L145">            return false;</span>
+<span class="nc bnc" id="L146" title="All 2 branches missed.">        if (!Objects.equals(channel, that.channel))</span>
+<span class="nc" id="L147">            return false;</span>
+<span class="nc bnc" id="L148" title="All 2 branches missed.">        if (!Objects.equals(icon, that.icon))</span>
+<span class="nc" id="L149">            return false;</span>
+<span class="nc bnc" id="L150" title="All 2 branches missed.">        if (!Objects.equals(text, that.text))</span>
+<span class="nc" id="L151">            return false;</span>
+
+<span class="nc bnc" id="L153" title="All 2 branches missed.">        return !(!Objects.equals(username, that.username));</span>
+
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc bnc" id="L159" title="All 2 branches missed.">        int result = attach != null ? attach.hashCode() : 0;</span>
+<span class="nc bnc" id="L160" title="All 2 branches missed.">        result = 31 * result + (channel != null ? channel.hashCode() : 0);</span>
+<span class="nc bnc" id="L161" title="All 2 branches missed.">        result = 31 * result + (icon != null ? icon.hashCode() : 0);</span>
+<span class="nc bnc" id="L162" title="All 2 branches missed.">        result = 31 * result + (text != null ? text.hashCode() : 0);</span>
+<span class="nc bnc" id="L163" title="All 2 branches missed.">        result = 31 * result + (username != null ? username.hashCode() : 0);</span>
+<span class="nc bnc" id="L164" title="All 2 branches missed.">        result = 31 * result + (unfurlMedia ? 1 : 0);</span>
+<span class="nc bnc" id="L165" title="All 2 branches missed.">        result = 31 * result + (unfurlLinks ? 1 : 0);</span>
+<span class="nc bnc" id="L166" title="All 2 branches missed.">        result = 31 * result + (linkNames ? 1 : 0);</span>
+<span class="nc" id="L167">        return result;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L172">        return &quot;SlackMessage{&quot; + &quot;attach=&quot; + attach + &quot;, channel='&quot; + channel + '\'' + &quot;, icon='&quot; + icon + '\''</span>
+                + &quot;, slackMessage=&quot; + slackMessage + &quot;, text='&quot; + text + '\'' + &quot;, username='&quot; + username + '\''
+                + &quot;, unfurlMedia=&quot; + unfurlMedia + &quot;, unfurlLinks=&quot; + unfurlLinks + &quot;, linkNames=&quot; + linkNames + '}';
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

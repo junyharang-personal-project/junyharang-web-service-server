@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ErrorLog.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JunyHarang</a> &gt; <a href="index.source.html" class="el_package">com.junyharang.config.logback.entity</a> &gt; <span class="el_source">ErrorLog.java</span></div><h1>ErrorLog.java</h1><pre class="source lang-java linenums">package com.junyharang.config.logback.entity;
+
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
+
+@DynamicInsert
+@DynamicUpdate
+@Entity
+@Table(name = &quot;ERROR_LOGS&quot;)
+<span class="fc" id="L13">public class ErrorLog {</span>
+
+    @Id
+    @Column(name = &quot;ID&quot;, precision = 20)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = &quot;PHASE&quot;, length = 10)
+    private String phase;
+
+    @Column(name = &quot;SYSTEM&quot;, length = 50)
+    private String system;
+
+    @Column(name = &quot;LOGGER_NAME&quot;, length = 300)
+    private String loggerName;
+
+    @Column(name = &quot;SERVER_NAME&quot;, length = 50)
+    private String serverName;
+
+    @Column(name = &quot;HOST_NAME&quot;, length = 50)
+    private String hostName;
+
+    @Column(name = &quot;PATH&quot;, length = 2048)
+    private String path;
+
+    @Column(name = &quot;MESSAGE&quot;, columnDefinition = &quot;TEXT&quot;)
+    private String message;
+
+    @Column(name = &quot;TRACE&quot;, columnDefinition = &quot;TEXT&quot;)
+    private String trace;
+
+<span class="fc" id="L44">    @Column(name = &quot;ERROR_DATETIME&quot;)</span>
+<span class="fc" id="L45">    private LocalDateTime errorDatetime = LocalDateTime.now();</span>
+
+<span class="fc" id="L47">    @Column(name = &quot;ALERT_YN&quot;, length = 1)</span>
+    private String alertYn = &quot;N&quot;;
+
+    @Column(name = &quot;HEADER_MAP&quot;, columnDefinition = &quot;TEXT&quot;)
+    private String headerMap;
+
+    @Column(name = &quot;PARAMETER_MAP&quot;, columnDefinition = &quot;TEXT&quot;)
+    private String parameterMap;
+
+    @Column(name = &quot;USER_INFO&quot;, columnDefinition = &quot;TEXT&quot;)
+    private String userInfo;
+
+    @Column(name = &quot;AGENT_DETAIL&quot;, columnDefinition = &quot;TEXT&quot;)
+    private String agentDetail;
+
+    public Long getId() {
+<span class="nc" id="L63">        return id;</span>
+    }
+
+    public void setId(Long id) {
+<span class="nc" id="L67">        this.id = id;</span>
+<span class="nc" id="L68">    }</span>
+
+    public String getPhase() {
+<span class="nc" id="L71">        return phase;</span>
+    }
+
+    public void setPhase(String phase) {
+<span class="nc" id="L75">        this.phase = phase;</span>
+<span class="nc" id="L76">    }</span>
+
+    public String getSystem() {
+<span class="nc" id="L79">        return system;</span>
+    }
+
+    public void setSystem(String system) {
+<span class="nc" id="L83">        this.system = system;</span>
+<span class="nc" id="L84">    }</span>
+
+    public String getLoggerName() {
+<span class="nc" id="L87">        return loggerName;</span>
+    }
+
+    public void setLoggerName(String loggerName) {
+<span class="nc" id="L91">        this.loggerName = loggerName;</span>
+<span class="nc" id="L92">    }</span>
+
+    public String getServerName() {
+<span class="nc" id="L95">        return serverName;</span>
+    }
+
+    public void setServerName(String serverName) {
+<span class="nc" id="L99">        this.serverName = serverName;</span>
+<span class="nc" id="L100">    }</span>
+
+    public String getHostName() {
+<span class="nc" id="L103">        return hostName;</span>
+    }
+
+    public void setHostName(String hostName) {
+<span class="nc" id="L107">        this.hostName = hostName;</span>
+<span class="nc" id="L108">    }</span>
+
+    public String getPath() {
+<span class="nc" id="L111">        return path;</span>
+    }
+
+    public void setPath(String path) {
+<span class="nc" id="L115">        this.path = path;</span>
+<span class="nc" id="L116">    }</span>
+
+    public String getMessage() {
+<span class="nc" id="L119">        return message;</span>
+    }
+
+    public void setMessage(String message) {
+<span class="nc" id="L123">        this.message = message;</span>
+<span class="nc" id="L124">    }</span>
+
+    public String getTrace() {
+<span class="nc" id="L127">        return trace;</span>
+    }
+
+    public void setTrace(String trace) {
+<span class="nc" id="L131">        this.trace = trace;</span>
+<span class="nc" id="L132">    }</span>
+
+    public LocalDateTime getErrorDatetime() {
+<span class="nc" id="L135">        return errorDatetime;</span>
+    }
+
+    public void setErrorDatetime(LocalDateTime errorDatetime) {
+<span class="nc" id="L139">        this.errorDatetime = errorDatetime;</span>
+<span class="nc" id="L140">    }</span>
+
+    public String getAlertYn() {
+<span class="nc" id="L143">        return alertYn;</span>
+    }
+
+    public void setAlertYn(String alertYn) {
+<span class="nc" id="L147">        this.alertYn = alertYn;</span>
+<span class="nc" id="L148">    }</span>
+
+    public String getHeaderMap() {
+<span class="nc" id="L151">        return headerMap;</span>
+    }
+
+    public void setHeaderMap(String headerMap) {
+<span class="nc" id="L155">        this.headerMap = headerMap;</span>
+<span class="nc" id="L156">    }</span>
+
+    public String getParameterMap() {
+<span class="nc" id="L159">        return parameterMap;</span>
+    }
+
+    public void setParameterMap(String parameterMap) {
+<span class="nc" id="L163">        this.parameterMap = parameterMap;</span>
+<span class="nc" id="L164">    }</span>
+
+    public String getUserInfo() {
+<span class="nc" id="L167">        return userInfo;</span>
+    }
+
+    public void setUserInfo(String userInfo) {
+<span class="nc" id="L171">        this.userInfo = userInfo;</span>
+<span class="nc" id="L172">    }</span>
+
+    public String getAgentDetail() {
+<span class="nc" id="L175">        return agentDetail;</span>
+    }
+
+    public void setAgentDetail(String agentDetail) {
+<span class="nc" id="L179">        this.agentDetail = agentDetail;</span>
+<span class="nc" id="L180">    }</span>
+
+    @Override
+    public boolean equals(Object o) {
+<span class="nc bnc" id="L184" title="All 2 branches missed.">        if (this == o) return true;</span>
+<span class="nc bnc" id="L185" title="All 4 branches missed.">        if (o == null || getClass() != o.getClass()) return false;</span>
+
+<span class="nc" id="L187">        ErrorLog errorLog = (ErrorLog) o;</span>
+
+<span class="nc bnc" id="L189" title="All 6 branches missed.">        if (id != null ? !id.equals(errorLog.id) : errorLog.id != null) return false;</span>
+<span class="nc bnc" id="L190" title="All 6 branches missed.">        if (phase != null ? !phase.equals(errorLog.phase) : errorLog.phase != null) return false;</span>
+<span class="nc bnc" id="L191" title="All 6 branches missed.">        if (system != null ? !system.equals(errorLog.system) : errorLog.system != null) return false;</span>
+<span class="nc bnc" id="L192" title="All 6 branches missed.">        if (loggerName != null ? !loggerName.equals(errorLog.loggerName) : errorLog.loggerName != null) return false;</span>
+<span class="nc bnc" id="L193" title="All 6 branches missed.">        if (serverName != null ? !serverName.equals(errorLog.serverName) : errorLog.serverName != null) return false;</span>
+<span class="nc bnc" id="L194" title="All 6 branches missed.">        if (hostName != null ? !hostName.equals(errorLog.hostName) : errorLog.hostName != null) return false;</span>
+<span class="nc bnc" id="L195" title="All 6 branches missed.">        if (path != null ? !path.equals(errorLog.path) : errorLog.path != null) return false;</span>
+<span class="nc bnc" id="L196" title="All 6 branches missed.">        if (message != null ? !message.equals(errorLog.message) : errorLog.message != null) return false;</span>
+<span class="nc bnc" id="L197" title="All 6 branches missed.">        if (trace != null ? !trace.equals(errorLog.trace) : errorLog.trace != null) return false;</span>
+<span class="nc bnc" id="L198" title="All 6 branches missed.">        if (errorDatetime != null ? !errorDatetime.equals(errorLog.errorDatetime) : errorLog.errorDatetime != null)</span>
+<span class="nc" id="L199">            return false;</span>
+<span class="nc bnc" id="L200" title="All 6 branches missed.">        if (alertYn != null ? !alertYn.equals(errorLog.alertYn) : errorLog.alertYn != null) return false;</span>
+<span class="nc bnc" id="L201" title="All 6 branches missed.">        if (headerMap != null ? !headerMap.equals(errorLog.headerMap) : errorLog.headerMap != null) return false;</span>
+<span class="nc bnc" id="L202" title="All 6 branches missed.">        if (parameterMap != null ? !parameterMap.equals(errorLog.parameterMap) : errorLog.parameterMap != null)</span>
+<span class="nc" id="L203">            return false;</span>
+<span class="nc bnc" id="L204" title="All 6 branches missed.">        if (userInfo != null ? !userInfo.equals(errorLog.userInfo) : errorLog.userInfo != null) return false;</span>
+<span class="nc bnc" id="L205" title="All 6 branches missed.">        return !(agentDetail != null ? !agentDetail.equals(errorLog.agentDetail) : errorLog.agentDetail != null);</span>
+
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc bnc" id="L211" title="All 2 branches missed.">        int result = id != null ? id.hashCode() : 0;</span>
+<span class="nc bnc" id="L212" title="All 2 branches missed.">        result = 31 * result + (phase != null ? phase.hashCode() : 0);</span>
+<span class="nc bnc" id="L213" title="All 2 branches missed.">        result = 31 * result + (system != null ? system.hashCode() : 0);</span>
+<span class="nc bnc" id="L214" title="All 2 branches missed.">        result = 31 * result + (loggerName != null ? loggerName.hashCode() : 0);</span>
+<span class="nc bnc" id="L215" title="All 2 branches missed.">        result = 31 * result + (serverName != null ? serverName.hashCode() : 0);</span>
+<span class="nc bnc" id="L216" title="All 2 branches missed.">        result = 31 * result + (hostName != null ? hostName.hashCode() : 0);</span>
+<span class="nc bnc" id="L217" title="All 2 branches missed.">        result = 31 * result + (path != null ? path.hashCode() : 0);</span>
+<span class="nc bnc" id="L218" title="All 2 branches missed.">        result = 31 * result + (message != null ? message.hashCode() : 0);</span>
+<span class="nc bnc" id="L219" title="All 2 branches missed.">        result = 31 * result + (trace != null ? trace.hashCode() : 0);</span>
+<span class="nc bnc" id="L220" title="All 2 branches missed.">        result = 31 * result + (errorDatetime != null ? errorDatetime.hashCode() : 0);</span>
+<span class="nc bnc" id="L221" title="All 2 branches missed.">        result = 31 * result + (alertYn != null ? alertYn.hashCode() : 0);</span>
+<span class="nc bnc" id="L222" title="All 2 branches missed.">        result = 31 * result + (headerMap != null ? headerMap.hashCode() : 0);</span>
+<span class="nc bnc" id="L223" title="All 2 branches missed.">        result = 31 * result + (parameterMap != null ? parameterMap.hashCode() : 0);</span>
+<span class="nc bnc" id="L224" title="All 2 branches missed.">        result = 31 * result + (userInfo != null ? userInfo.hashCode() : 0);</span>
+<span class="nc bnc" id="L225" title="All 2 branches missed.">        result = 31 * result + (agentDetail != null ? agentDetail.hashCode() : 0);</span>
+<span class="nc" id="L226">        return result;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L231">        return &quot;ErrorLog{&quot; +</span>
+                &quot;id=&quot; + id +
+                &quot;, phase='&quot; + phase + '\'' +
+                &quot;, system='&quot; + system + '\'' +
+                &quot;, loggerName='&quot; + loggerName + '\'' +
+                &quot;, serverName='&quot; + serverName + '\'' +
+                &quot;, hostName='&quot; + hostName + '\'' +
+                &quot;, path='&quot; + path + '\'' +
+                &quot;, message='&quot; + message + '\'' +
+                &quot;, trace='&quot; + trace + '\'' +
+                &quot;, errorDatetime=&quot; + errorDatetime +
+                &quot;, alertYn='&quot; + alertYn + '\'' +
+                &quot;, headerMap='&quot; + headerMap + '\'' +
+                &quot;, parameterMap='&quot; + parameterMap + '\'' +
+                &quot;, userInfo='&quot; + userInfo + '\'' +
+                &quot;, agentDetail='&quot; + agentDetail + '\'' +
+                '}';
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

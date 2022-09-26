@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AgentUtils.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JunyHarang</a> &gt; <a href="index.source.html" class="el_package">com.junyharang.common.util</a> &gt; <span class="el_source">AgentUtils.java</span></div><h1>AgentUtils.java</h1><pre class="source lang-java linenums">package com.junyharang.common.util;
+
+import eu.bitwalker.useragentutils.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
+
+<span class="nc" id="L9">public class AgentUtils {</span>
+
+    public static String getUserAgentString(HttpServletRequest request) {
+<span class="nc" id="L12">        return request.getHeader(&quot;User-Agent&quot;);</span>
+    }
+
+    public static String getUserAgentString() {
+<span class="nc" id="L16">        return getUserAgentString(HttpUtils.getCurrentRequest());</span>
+    }
+
+    public static UserAgent getUserAgent(HttpServletRequest request) {
+        try {
+<span class="nc" id="L21">            String userAgentString = getUserAgentString(request);</span>
+<span class="nc" id="L22">            return UserAgent.parseUserAgentString(userAgentString);</span>
+<span class="nc" id="L23">        } catch (Exception e) {</span>
+            // ignored
+        }
+<span class="nc" id="L26">        return null;</span>
+    }
+
+    public static UserAgent getUserAgent() {
+<span class="nc" id="L30">        return getUserAgent(HttpUtils.getCurrentRequest());</span>
+    }
+
+    public static OperatingSystem getUserOs(HttpServletRequest request) {
+<span class="nc" id="L34">        UserAgent userAgent = getUserAgent(request);</span>
+<span class="nc bnc" id="L35" title="All 2 branches missed.">        return userAgent == null ? OperatingSystem.UNKNOWN : userAgent.getOperatingSystem();</span>
+    }
+
+    public static OperatingSystem getUserOs() {
+<span class="nc" id="L39">        return getUserOs(HttpUtils.getCurrentRequest());</span>
+    }
+
+    public static Browser getBrowser(HttpServletRequest request) {
+<span class="nc" id="L43">        UserAgent userAgent = getUserAgent(request);</span>
+<span class="nc bnc" id="L44" title="All 2 branches missed.">        return userAgent == null ? Browser.UNKNOWN : userAgent.getBrowser();</span>
+    }
+
+    public static Browser getBrowser() {
+<span class="nc" id="L48">        return getBrowser(HttpUtils.getCurrentRequest());</span>
+    }
+
+    public static Version getBrowserVersion(HttpServletRequest request) {
+<span class="nc" id="L52">        UserAgent userAgent = getUserAgent(request);</span>
+<span class="nc bnc" id="L53" title="All 2 branches missed.">        return userAgent == null ? new Version(&quot;0&quot;, &quot;0&quot;, &quot;0&quot;) : userAgent.getBrowserVersion();</span>
+    }
+
+    public static BrowserType getBrowserType(HttpServletRequest request) {
+<span class="nc" id="L57">        Browser browser = getBrowser(request);</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">        return browser == null ? BrowserType.UNKNOWN : browser.getBrowserType();</span>
+    }
+
+    public static BrowserType getBrowserType() {
+<span class="nc" id="L62">        return getBrowserType(HttpUtils.getCurrentRequest());</span>
+    }
+
+    public static RenderingEngine getRenderingEngine(HttpServletRequest request) {
+<span class="nc" id="L66">        Browser browser = getBrowser(request);</span>
+<span class="nc bnc" id="L67" title="All 2 branches missed.">        return browser == null ? RenderingEngine.OTHER : browser.getRenderingEngine();</span>
+    }
+
+    public static RenderingEngine getRenderingEngine() {
+<span class="nc" id="L71">        return getRenderingEngine(HttpUtils.getCurrentRequest());</span>
+    }
+
+    public static Version getBrowserVersion() {
+<span class="nc" id="L75">        return getBrowserVersion(HttpUtils.getCurrentRequest());</span>
+    }
+
+    public static DeviceType getDeviceType(HttpServletRequest request) {
+<span class="nc" id="L79">        OperatingSystem operatingSystem = getUserOs(request);</span>
+<span class="nc bnc" id="L80" title="All 2 branches missed.">        return operatingSystem == null ? DeviceType.UNKNOWN : operatingSystem.getDeviceType();</span>
+    }
+
+    public static DeviceType getDeviceType() {
+<span class="nc" id="L84">        return getDeviceType(HttpUtils.getCurrentRequest());</span>
+    }
+
+    public static Manufacturer getManufacturer(HttpServletRequest request) {
+<span class="nc" id="L88">        OperatingSystem operatingSystem = getUserOs(request);</span>
+<span class="nc bnc" id="L89" title="All 2 branches missed.">        return operatingSystem == null ? Manufacturer.OTHER : operatingSystem.getManufacturer();</span>
+    }
+
+    public static Manufacturer getManufacturer() {
+<span class="nc" id="L93">        return getManufacturer(HttpUtils.getCurrentRequest());</span>
+    }
+
+    public static Map&lt;String, String&gt; getAgentDetail(HttpServletRequest request) {
+<span class="nc" id="L97">        Map&lt;String, String&gt; agentDetail = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L98">        agentDetail.put(&quot;browser&quot;, getBrowser(request).toString());</span>
+<span class="nc" id="L99">        agentDetail.put(&quot;browserType&quot;, getBrowserType(request).toString());</span>
+<span class="nc bnc" id="L100" title="All 2 branches missed.">        agentDetail.put(&quot;browserVersion&quot;, getBrowserVersion(request) == null ? null : getBrowserVersion(request).toString());</span>
+<span class="nc" id="L101">        agentDetail.put(&quot;renderingEngine&quot;, getRenderingEngine(request).toString());</span>
+<span class="nc" id="L102">        agentDetail.put(&quot;os&quot;, getUserOs(request).toString());</span>
+<span class="nc" id="L103">        agentDetail.put(&quot;deviceType&quot;, getDeviceType(request).toString());</span>
+<span class="nc" id="L104">        agentDetail.put(&quot;manufacturer&quot;, getManufacturer(request).toString());</span>
+
+<span class="nc" id="L106">        return agentDetail;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

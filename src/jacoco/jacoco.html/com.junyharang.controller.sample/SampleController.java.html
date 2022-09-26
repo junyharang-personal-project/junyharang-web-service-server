@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SampleController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JunyHarang</a> &gt; <a href="index.source.html" class="el_package">com.junyharang.controller.sample</a> &gt; <span class="el_source">SampleController.java</span></div><h1>SampleController.java</h1><pre class="source lang-java linenums">package com.junyharang.controller.sample;
+
+import com.junyharang.constant.APIUriInfo;
+import com.junyharang.constant.DefaultResponseMessage;
+import com.junyharang.constant.SwaggerApiInfo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * &lt;b&gt;Test Controller&lt;/b&gt;
+ *
+ * @author 주니하랑
+ * @version 1.0.0
+ */
+
+@RequiredArgsConstructor
+<span class="fc" id="L26">@Slf4j</span>
+@Api(tags = &quot;Test Slack Alarm API&quot;)
+@ApiOperation(value = SwaggerApiInfo.POSTING)
+@RestController
+public class SampleController {
+
+    @ApiOperation(value = SwaggerApiInfo.TEST, notes = &quot;Slack 및 Console Java Exception Logging Test 입니다.&quot;)
+    @ApiResponses(value = {
+            @ApiResponse(code = DefaultResponseMessage.OK, message = DefaultResponseMessage.KOREAN_200),
+            @ApiResponse(code = DefaultResponseMessage.NOT_FOUND, message = DefaultResponseMessage.KOREAN_404),
+            @ApiResponse(code = DefaultResponseMessage.UN_AUTHORIZATION, message = DefaultResponseMessage.KOREAN_401),
+            @ApiResponse(code = DefaultResponseMessage.SERVER_ERROR, message = DefaultResponseMessage.KOREAN_500)
+    })
+
+    @GetMapping(value = APIUriInfo.TEST_LOG_BACK, produces = &quot;text/plain;charset=UTF-8&quot;)
+    public String logbackTest(HttpServletRequest request, HttpServletResponse response) {
+<span class="nc" id="L42">        String requestURI = request.getRequestURI();</span>
+
+        try {
+<span class="nc" id="L45">            String messagePrefix = &quot;Slack 및 Console LogBack Test 중 입니다! 출력 Error 단계를 확인 하겠습니다! \n&quot;;</span>
+
+<span class="nc" id="L47">            log.debug(messagePrefix + &quot;Debug 단계 Log 출력입니다!&quot;);</span>
+<span class="nc" id="L48">            log.info(messagePrefix + &quot;Info 단계 Log 출력입니다! &quot;);</span>
+<span class="nc" id="L49">            log.trace(messagePrefix + &quot;trace 단계 Log 출력 입니다!&quot;);</span>
+<span class="nc" id="L50">            log.warn(messagePrefix + &quot;warning 단계 Log 출력 입니다!&quot;);</span>
+<span class="nc" id="L51">            log.error(messagePrefix + &quot;error 단계 Log 출력 입니다!&quot;);</span>
+<span class="nc" id="L52">            throw new IllegalArgumentException(&quot;test&quot;);</span>
+<span class="nc" id="L53">        } catch (RuntimeException e) {</span>
+<span class="nc" id="L54">            log.error(&quot;requestURI = ({}), request = ({}), e.getMessage = ({}), e = ({})&quot;, requestURI, request, e.getMessage(), e);</span>
+<span class="nc" id="L55">            return &quot;Local 환경에서 해당 API 호출 시 IDE Console 확인해 주세요. DEV, Operation 환경에서 API 호출 시 Slack 확인 해 주세요. 헤헤&quot;;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

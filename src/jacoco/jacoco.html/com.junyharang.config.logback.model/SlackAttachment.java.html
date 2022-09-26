@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SlackAttachment.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JunyHarang</a> &gt; <a href="index.source.html" class="el_package">com.junyharang.config.logback.model</a> &gt; <span class="el_source">SlackAttachment.java</span></div><h1>SlackAttachment.java</h1><pre class="source lang-java linenums">package com.junyharang.config.logback.model;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+import lombok.Setter;
+
+import java.util.*;
+
+@Setter
+public class SlackAttachment {
+
+    private static final String HEX_REGEX = &quot;^([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$&quot;;
+    private static final String FALLBACK = &quot;fallback&quot;;
+    private static final String CALLBACK_ID = &quot;callback_id&quot;;
+    private static final String TEXT = &quot;text&quot;;
+    private static final String PRETEXT = &quot;pretext&quot;;
+    private static final String COLOR = &quot;color&quot;;
+    private static final String FIELDS = &quot;fields&quot;;
+    private static final String AUTHOR_NAME = &quot;author_name&quot;;
+    private static final String AUTHOR_LINK = &quot;author_link&quot;;
+    private static final String AUTHOR_ICON = &quot;author_icon&quot;;
+    private static final String TITLE = &quot;title&quot;;
+    private static final String TITLE_LINK = &quot;title_link&quot;;
+    private static final String IMAGE_URL = &quot;image_url&quot;;
+    private static final String THUMB_URL = &quot;thumb_url&quot;;
+    private static final String MRKDWN_IN = &quot;mrkdwn_in&quot;;
+    private static final String ACTIONS = &quot;actions&quot;;
+    private static final String TIMESTAMP = &quot;ts&quot;;
+    private static final String FOOTER = &quot;footer&quot;;
+    private static final String FOOTER_ICON = &quot;footer_icon&quot;;
+
+    private String fallback;
+    private String callbackId;
+    private String text;
+    private String pretext;
+    private String color;
+    private String authorName;
+    private String authorLink;
+    private String authorIcon;
+    private String title;
+    private String titleLink;
+    private String imageUrl;
+    private String thumbUrl;
+<span class="nc" id="L45">    private Set&lt;String&gt; markdownAttributes = new HashSet&lt;String&gt;();</span>
+<span class="nc" id="L46">    private List&lt;SlackField&gt; fields = new ArrayList&lt;SlackField&gt;();</span>
+<span class="nc" id="L47">    private List&lt;SlackAction&gt; actions = new ArrayList&lt;SlackAction&gt;();</span>
+<span class="nc" id="L48">    private Long timestamp = null;</span>
+<span class="nc" id="L49">    private String footer = null;</span>
+<span class="nc" id="L50">    private String footerIcon = null;</span>
+
+<span class="nc" id="L52">    public SlackAttachment() {</span>
+<span class="nc" id="L53">    }</span>
+
+<span class="nc" id="L55">    public SlackAttachment(String fallback) {</span>
+<span class="nc" id="L56">        this.fallback = fallback;</span>
+<span class="nc" id="L57">    }</span>
+
+    public SlackAttachment addFields(SlackField field) {
+<span class="nc" id="L60">        this.fields.add(field);</span>
+
+<span class="nc" id="L62">        return this;</span>
+    }
+
+    public SlackAttachment addAction(SlackAction action) {
+<span class="nc" id="L66">        this.actions.add(action);</span>
+
+<span class="nc" id="L68">        return this;</span>
+    }
+
+    public SlackAttachment addMarkdownAttribute(String attr) {
+<span class="nc" id="L72">        this.markdownAttributes.add(attr);</span>
+
+<span class="nc" id="L74">        return this;</span>
+    }
+
+    private boolean isHex(String pair) {
+<span class="nc" id="L78">        return pair.matches(HEX_REGEX);</span>
+    }
+
+    private JsonArray prepareFields() {
+<span class="nc" id="L82">        final JsonArray data = new JsonArray();</span>
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        for (SlackField field : fields) {</span>
+<span class="nc" id="L84">            data.add(field.toJson());</span>
+<span class="nc" id="L85">        }</span>
+
+<span class="nc" id="L87">        return data;</span>
+    }
+
+    private JsonArray prepareActions() {
+<span class="nc" id="L91">        final JsonArray data = new JsonArray();</span>
+<span class="nc bnc" id="L92" title="All 2 branches missed.">        for (SlackAction action : actions) {</span>
+<span class="nc" id="L93">            data.add(action.toJson());</span>
+<span class="nc" id="L94">        }</span>
+
+<span class="nc" id="L96">        return data;</span>
+    }
+
+    public SlackAttachment removeAction(int index) {
+<span class="nc" id="L100">        this.actions.remove(index);</span>
+
+<span class="nc" id="L102">        return this;</span>
+    }
+
+    public SlackAttachment removeFields(int index) {
+<span class="nc" id="L106">        this.fields.remove(index);</span>
+
+<span class="nc" id="L108">        return this;</span>
+    }
+
+    private JsonArray prepareMarkdownAttributes() {
+<span class="nc" id="L112">        final JsonArray data = new JsonArray();</span>
+<span class="nc bnc" id="L113" title="All 2 branches missed.">        for (String attr : markdownAttributes) {</span>
+<span class="nc" id="L114">            data.add(new JsonPrimitive(attr));</span>
+<span class="nc" id="L115">        }</span>
+
+<span class="nc" id="L117">        return data;</span>
+    }
+
+    public SlackAttachment removeMarkdownAttribute(String attr) {
+<span class="nc" id="L121">        this.markdownAttributes.remove(attr);</span>
+
+<span class="nc" id="L123">        return this;</span>
+    }
+
+    public SlackAttachment setColor(String color) {
+<span class="nc bnc" id="L127" title="All 2 branches missed.">        if (color != null) {</span>
+<span class="nc bnc" id="L128" title="All 2 branches missed.">            if (color.charAt(0) == '#') {</span>
+<span class="nc bnc" id="L129" title="All 2 branches missed.">                if (!isHex(color.substring(1))) {</span>
+<span class="nc" id="L130">                    throw new IllegalArgumentException(&quot;Invalid Hex Color @ SlackAttachment&quot;);</span>
+                }
+<span class="nc bnc" id="L132" title="All 2 branches missed.">            } else if (!color.matches(&quot;^(good|warning|danger)$&quot;)) {</span>
+<span class="nc" id="L133">                throw new IllegalArgumentException(&quot;Invalid PreDefined Color @ SlackAttachment&quot;);</span>
+            }
+        }
+
+<span class="nc" id="L137">        this.color = color;</span>
+
+<span class="nc" id="L139">        return this;</span>
+    }
+
+    public SlackAttachment setTimestamp(Date date) {
+<span class="nc" id="L143">        this.timestamp = date.getTime() / 1000;</span>
+
+<span class="nc" id="L145">        return this;</span>
+    }
+
+    public JsonObject toJson() {
+<span class="nc" id="L149">        JsonObject data = new JsonObject();</span>
+
+<span class="nc bnc" id="L151" title="All 2 branches missed.">        if (fallback == null) {</span>
+<span class="nc" id="L152">            throw new IllegalArgumentException(&quot;Missing Fallback @ SlackAttachment&quot;);</span>
+        } else {
+<span class="nc" id="L154">            data.addProperty(FALLBACK, fallback);</span>
+        }
+
+<span class="nc bnc" id="L157" title="All 2 branches missed.">        if (text != null) {</span>
+<span class="nc" id="L158">            data.addProperty(TEXT, text);</span>
+        }
+
+<span class="nc bnc" id="L161" title="All 2 branches missed.">        if (pretext != null) {</span>
+<span class="nc" id="L162">            data.addProperty(PRETEXT, pretext);</span>
+        }
+
+<span class="nc bnc" id="L165" title="All 2 branches missed.">        if (color != null) {</span>
+<span class="nc" id="L166">            data.addProperty(COLOR, color);</span>
+        }
+
+<span class="nc bnc" id="L169" title="All 2 branches missed.">        if (authorName != null) {</span>
+<span class="nc" id="L170">            data.addProperty(AUTHOR_NAME, authorName);</span>
+        }
+
+<span class="nc bnc" id="L173" title="All 2 branches missed.">        if (authorLink != null) {</span>
+<span class="nc" id="L174">            data.addProperty(AUTHOR_LINK, authorLink);</span>
+        }
+
+<span class="nc bnc" id="L177" title="All 2 branches missed.">        if (authorIcon != null) {</span>
+<span class="nc" id="L178">            data.addProperty(AUTHOR_ICON, authorIcon);</span>
+        }
+
+<span class="nc bnc" id="L181" title="All 2 branches missed.">        if (title != null) {</span>
+<span class="nc" id="L182">            data.addProperty(TITLE, title);</span>
+        }
+
+<span class="nc bnc" id="L185" title="All 2 branches missed.">        if (titleLink != null) {</span>
+<span class="nc" id="L186">            data.addProperty(TITLE_LINK, titleLink);</span>
+        }
+
+<span class="nc bnc" id="L189" title="All 2 branches missed.">        if (imageUrl != null) {</span>
+<span class="nc" id="L190">            data.addProperty(IMAGE_URL, imageUrl);</span>
+        }
+
+<span class="nc bnc" id="L193" title="All 2 branches missed.">        if (thumbUrl != null) {</span>
+<span class="nc" id="L194">            data.addProperty(THUMB_URL, thumbUrl);</span>
+        }
+
+<span class="nc bnc" id="L197" title="All 2 branches missed.">        if (markdownAttributes != null) {</span>
+<span class="nc" id="L198">            data.add(MRKDWN_IN, prepareMarkdownAttributes());</span>
+        }
+
+<span class="nc bnc" id="L201" title="All 4 branches missed.">        if (fields != null &amp;&amp; fields.size() &gt; 0) {</span>
+<span class="nc" id="L202">            data.add(FIELDS, prepareFields());</span>
+        }
+
+<span class="nc bnc" id="L205" title="All 4 branches missed.">        if (actions != null &amp;&amp; actions.size() &gt; 0) {</span>
+<span class="nc" id="L206">            data.add(ACTIONS, prepareActions());</span>
+
+<span class="nc bnc" id="L208" title="All 2 branches missed.">            if (callbackId == null) {</span>
+<span class="nc" id="L209">                throw new IllegalArgumentException(&quot;Missing Callback ID @ SlackAttachment&quot;);</span>
+            } else {
+<span class="nc" id="L211">                data.addProperty(CALLBACK_ID, callbackId);</span>
+            }
+        }
+
+<span class="nc bnc" id="L215" title="All 2 branches missed.">        if (timestamp != null) {</span>
+<span class="nc" id="L216">            data.addProperty(TIMESTAMP, timestamp);</span>
+        }
+
+<span class="nc bnc" id="L219" title="All 2 branches missed.">        if (footer != null) {</span>
+<span class="nc" id="L220">            data.addProperty(FOOTER, footer);</span>
+        }
+
+<span class="nc bnc" id="L223" title="All 2 branches missed.">        if (footerIcon != null) {</span>
+<span class="nc" id="L224">            data.addProperty(FOOTER_ICON, footerIcon);</span>
+        }
+
+<span class="nc" id="L227">        return data;</span>
+    }
+
+    @Override
+    public boolean equals(Object o) {
+<span class="nc bnc" id="L232" title="All 2 branches missed.">        if (this == o)</span>
+<span class="nc" id="L233">            return true;</span>
+<span class="nc bnc" id="L234" title="All 4 branches missed.">        if (o == null || getClass() != o.getClass())</span>
+<span class="nc" id="L235">            return false;</span>
+
+<span class="nc" id="L237">        SlackAttachment that = (SlackAttachment) o;</span>
+
+<span class="nc bnc" id="L239" title="All 2 branches missed.">        if (!Objects.equals(fallback, that.fallback))</span>
+<span class="nc" id="L240">            return false;</span>
+<span class="nc bnc" id="L241" title="All 2 branches missed.">        if (!Objects.equals(text, that.text))</span>
+<span class="nc" id="L242">            return false;</span>
+<span class="nc bnc" id="L243" title="All 2 branches missed.">        if (!Objects.equals(pretext, that.pretext))</span>
+<span class="nc" id="L244">            return false;</span>
+<span class="nc bnc" id="L245" title="All 2 branches missed.">        if (!Objects.equals(color, that.color))</span>
+<span class="nc" id="L246">            return false;</span>
+<span class="nc bnc" id="L247" title="All 2 branches missed.">        if (!Objects.equals(authorName, that.authorName))</span>
+<span class="nc" id="L248">            return false;</span>
+<span class="nc bnc" id="L249" title="All 2 branches missed.">        if (!Objects.equals(authorLink, that.authorLink))</span>
+<span class="nc" id="L250">            return false;</span>
+<span class="nc bnc" id="L251" title="All 2 branches missed.">        if (!Objects.equals(authorIcon, that.authorIcon))</span>
+<span class="nc" id="L252">            return false;</span>
+<span class="nc bnc" id="L253" title="All 2 branches missed.">        if (!Objects.equals(title, that.title))</span>
+<span class="nc" id="L254">            return false;</span>
+<span class="nc bnc" id="L255" title="All 2 branches missed.">        if (!Objects.equals(titleLink, that.titleLink))</span>
+<span class="nc" id="L256">            return false;</span>
+<span class="nc bnc" id="L257" title="All 2 branches missed.">        if (!Objects.equals(imageUrl, that.imageUrl))</span>
+<span class="nc" id="L258">            return false;</span>
+<span class="nc bnc" id="L259" title="All 2 branches missed.">        if (!Objects.equals(thumbUrl, that.thumbUrl))</span>
+<span class="nc" id="L260">            return false;</span>
+<span class="nc bnc" id="L261" title="All 2 branches missed.">        if (!Objects.equals(markdownAttributes, that.markdownAttributes))</span>
+<span class="nc" id="L262">            return false;</span>
+
+<span class="nc bnc" id="L264" title="All 2 branches missed.">        if (!Objects.equals(timestamp, that.timestamp))</span>
+<span class="nc" id="L265">            return false;</span>
+<span class="nc bnc" id="L266" title="All 2 branches missed.">        if (!Objects.equals(footer, that.footer))</span>
+<span class="nc" id="L267">            return false;</span>
+<span class="nc bnc" id="L268" title="All 2 branches missed.">        if (!Objects.equals(footerIcon, that.footerIcon))</span>
+<span class="nc" id="L269">            return false;</span>
+<span class="nc bnc" id="L270" title="All 2 branches missed.">        return !(!Objects.equals(fields, that.fields));</span>
+
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc bnc" id="L276" title="All 2 branches missed.">        int result = fallback != null ? fallback.hashCode() : 0;</span>
+<span class="nc bnc" id="L277" title="All 2 branches missed.">        result = 31 * result + (text != null ? text.hashCode() : 0);</span>
+<span class="nc bnc" id="L278" title="All 2 branches missed.">        result = 31 * result + (pretext != null ? pretext.hashCode() : 0);</span>
+<span class="nc bnc" id="L279" title="All 2 branches missed.">        result = 31 * result + (color != null ? color.hashCode() : 0);</span>
+<span class="nc bnc" id="L280" title="All 2 branches missed.">        result = 31 * result + (authorName != null ? authorName.hashCode() : 0);</span>
+<span class="nc bnc" id="L281" title="All 2 branches missed.">        result = 31 * result + (authorLink != null ? authorLink.hashCode() : 0);</span>
+<span class="nc bnc" id="L282" title="All 2 branches missed.">        result = 31 * result + (authorIcon != null ? authorIcon.hashCode() : 0);</span>
+<span class="nc bnc" id="L283" title="All 2 branches missed.">        result = 31 * result + (title != null ? title.hashCode() : 0);</span>
+<span class="nc bnc" id="L284" title="All 2 branches missed.">        result = 31 * result + (titleLink != null ? titleLink.hashCode() : 0);</span>
+<span class="nc bnc" id="L285" title="All 2 branches missed.">        result = 31 * result + (imageUrl != null ? imageUrl.hashCode() : 0);</span>
+<span class="nc bnc" id="L286" title="All 2 branches missed.">        result = 31 * result + (thumbUrl != null ? thumbUrl.hashCode() : 0);</span>
+<span class="nc bnc" id="L287" title="All 2 branches missed.">        result = 31 * result + (markdownAttributes != null ? markdownAttributes.hashCode() : 0);</span>
+<span class="nc bnc" id="L288" title="All 2 branches missed.">        result = 31 * result + (fields != null ? fields.hashCode() : 0);</span>
+<span class="nc bnc" id="L289" title="All 2 branches missed.">        result = 31 * result + (footer != null ? footer.hashCode() : 0);</span>
+<span class="nc bnc" id="L290" title="All 2 branches missed.">        result = 31 * result + (footerIcon != null ? footerIcon.hashCode() : 0);</span>
+<span class="nc bnc" id="L291" title="All 2 branches missed.">        result = 31 * result + (timestamp != null ? timestamp.hashCode() : 0);</span>
+<span class="nc" id="L292">        return result;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L297">        return &quot;SlackAttachment{&quot; + &quot;fallback='&quot; + fallback + '\'' + &quot;, text='&quot; + text + '\'' + &quot;, pretext='&quot; + pretext</span>
+                + '\'' + &quot;, color='&quot; + color + '\'' + &quot;, authorName='&quot; + authorName + '\'' + &quot;, authorLink='&quot;
+                + authorLink + '\'' + &quot;, authorIcon='&quot; + authorIcon + '\'' + &quot;, title='&quot; + title + '\''
+                + &quot;, titleLink='&quot; + titleLink + '\'' + &quot;, imageUrl='&quot; + imageUrl + '\'' + &quot;, thumbUrl='&quot; + thumbUrl
+                + '\'' + &quot;, markdownAttributes=&quot; + markdownAttributes + &quot;, fields=&quot; + fields + &quot;, ts=&quot; + timestamp
+                + &quot;, footer=&quot; + footer + &quot;, footerIcon=&quot; + footerIcon + '}';
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

@@ -1,0 +1,10 @@
+<appender name="privateLogAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOG_PATH}/private.${port:-default}.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        <fileNamePattern>${LOG_PATH}/private.${port:-default}.log.%d{yyyy-MM-dd}</fileNamePattern>
+        <maxHistory>7</maxHistory>
+    </rollingPolicy>
+    <encoder>
+        <pattern>%replace(%msg){'\n', ' '}%n</pattern>
+    </encoder>
+</appender>

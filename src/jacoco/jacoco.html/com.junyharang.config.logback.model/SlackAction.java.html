@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SlackAction.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JunyHarang</a> &gt; <a href="index.source.html" class="el_package">com.junyharang.config.logback.model</a> &gt; <span class="el_source">SlackAction.java</span></div><h1>SlackAction.java</h1><pre class="source lang-java linenums">package com.junyharang.config.logback.model;
+
+import com.google.gson.JsonObject;
+public class SlackAction {
+
+    private static final String NAME = &quot;name&quot;;
+    private static final String TEXT = &quot;text&quot;;
+    private static final String TYPE = &quot;type&quot;;
+    private static final String VALUE = &quot;value&quot;;
+    private static final String CONFIRM = &quot;confirm&quot;;
+    private static final String STYLE = &quot;style&quot;;
+    private static final String OPTIONS = &quot;options&quot;;
+    private static final String OPTION_GROUPS = &quot;option_groups&quot;;
+    private static final String DATA_SOURCE = &quot;data_source&quot;;
+    private static final String SELECTED_OPTIONS = &quot;selected_options&quot;;
+    private static final String MIN_QUERY_LENGTH = &quot;min_query_length&quot;;
+
+    private String name;
+    private String text;
+    private SlackActionType type;
+    private String value;
+    private SlackActionStyle style;
+
+<span class="nc" id="L24">    public SlackAction(String name, String text, SlackActionType type, String value) {</span>
+<span class="nc" id="L25">        this.name = name;</span>
+<span class="nc" id="L26">        this.text = text;</span>
+<span class="nc" id="L27">        this.type = type;</span>
+<span class="nc" id="L28">        this.value = value;</span>
+<span class="nc" id="L29">    }</span>
+
+    public String getName() {
+<span class="nc" id="L32">        return name;</span>
+    }
+
+    public void setName(String name) {
+<span class="nc" id="L36">        this.name = name;</span>
+<span class="nc" id="L37">    }</span>
+
+    public String getText() {
+<span class="nc" id="L40">        return text;</span>
+    }
+
+    public void setText(String text) {
+<span class="nc" id="L44">        this.text = text;</span>
+<span class="nc" id="L45">    }</span>
+
+    public SlackActionType getType() {
+<span class="nc" id="L48">        return type;</span>
+    }
+
+    public void setType(SlackActionType type) {
+<span class="nc" id="L52">        this.type = type;</span>
+<span class="nc" id="L53">    }</span>
+
+    public String getValue() {
+<span class="nc" id="L56">        return value;</span>
+    }
+
+    public void setValue(String value) {
+<span class="nc" id="L60">        this.value = value;</span>
+<span class="nc" id="L61">    }</span>
+
+    public SlackActionStyle getStyle() {
+<span class="nc" id="L64">        return style;</span>
+    }
+
+    public void setStyle(SlackActionStyle style) {
+<span class="nc" id="L68">        this.style = style;</span>
+<span class="nc" id="L69">    }</span>
+
+    public JsonObject toJson() {
+<span class="nc" id="L72">        final JsonObject data = new JsonObject();</span>
+<span class="nc" id="L73">        data.addProperty(NAME, name);</span>
+<span class="nc" id="L74">        data.addProperty(TEXT, text);</span>
+
+<span class="nc bnc" id="L76" title="All 2 branches missed.">        if (type != null) {</span>
+<span class="nc" id="L77">            data.addProperty(TYPE, type.getCode());</span>
+        }
+
+<span class="nc" id="L80">        data.addProperty(VALUE, value);</span>
+
+<span class="nc bnc" id="L82" title="All 2 branches missed.">        if (style != null) {</span>
+<span class="nc" id="L83">            data.addProperty(STYLE, style.getCode());</span>
+        }
+
+<span class="nc" id="L86">        return data;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

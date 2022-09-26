@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Pagination.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JunyHarang</a> &gt; <a href="index.source.html" class="el_package">com.junyharang.constant</a> &gt; <span class="el_source">Pagination.java</span></div><h1>Pagination.java</h1><pre class="source lang-java linenums">package com.junyharang.constant;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Page;
+
+/**
+ * &lt;b&gt;목록 조회를 위한 페이징 처리 Class&lt;/b&gt;
+ *
+ * @author 주니하랑
+ * @version 1.0.0, 2022.08.19 초기구성
+ */
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Pagination {
+
+    // 전체 페이지 수
+    private Integer totalPages;
+
+    // 전체 데이터 수
+    private Long totalElements;
+
+    // 현재 페이지
+    private Integer currentPage;
+
+    // 현재 페이지에 나올 데이터 수
+    private Integer currentElements;
+
+<span class="nc" id="L34">    public Pagination(Page&lt;?&gt; page) {</span>
+
+<span class="nc" id="L36">        this.totalPages = page.getTotalPages();</span>
+<span class="nc" id="L37">        this.totalElements = page.getTotalElements();</span>
+<span class="nc" id="L38">        this.currentPage = page.getNumber();</span>
+<span class="nc" id="L39">        this.currentElements = page.getNumberOfElements();</span>
+
+<span class="nc" id="L41">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

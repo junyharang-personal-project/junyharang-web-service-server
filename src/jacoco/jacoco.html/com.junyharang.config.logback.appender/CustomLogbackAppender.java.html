@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CustomLogbackAppender.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JunyHarang</a> &gt; <a href="index.source.html" class="el_package">com.junyharang.config.logback.appender</a> &gt; <span class="el_source">CustomLogbackAppender.java</span></div><h1>CustomLogbackAppender.java</h1><pre class="source lang-java linenums">package com.junyharang.config.logback.appender;
+
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.classic.spi.StackTraceElementProxy;
+import ch.qos.logback.core.UnsynchronizedAppenderBase;
+import ch.qos.logback.core.util.ContextUtil;
+import com.junyharang.common.util.JsonUtils;
+import com.junyharang.common.util.MDCUtil;
+import com.junyharang.config.logback.config.LogConfig;
+import com.junyharang.config.logback.entity.ErrorLog;
+import com.junyharang.config.logback.model.SlackApi;
+import com.junyharang.config.logback.model.SlackAttachment;
+import com.junyharang.config.logback.model.SlackField;
+import com.junyharang.config.logback.model.SlackMessage;
+import com.junyharang.config.logback.service.ErrorLogService;
+
+
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class CustomLogbackAppender extends UnsynchronizedAppenderBase&lt;ILoggingEvent&gt; {
+
+    private ErrorLogService errorLogService;
+
+    private LogConfig logConfig;
+
+<span class="fc" id="L29">    public CustomLogbackAppender(ErrorLogService errorLogService, LogConfig logConfig) {</span>
+<span class="fc" id="L30">        this.errorLogService = errorLogService;</span>
+<span class="fc" id="L31">        this.logConfig = logConfig;</span>
+<span class="fc" id="L32">    }</span>
+
+
+    @Override
+    public void doAppend(ILoggingEvent eventObject) {
+<span class="fc" id="L37">        super.doAppend(eventObject);</span>
+<span class="fc" id="L38">    }</span>
+
+    @Override
+    protected void append(ILoggingEvent loggingEvent) {
+<span class="nc bnc" id="L42" title="All 2 branches missed.">        if (loggingEvent.getLevel().isGreaterOrEqual(logConfig.getLevel())) {</span>
+<span class="nc" id="L43">            ErrorLog errorLog = getErrorLog(loggingEvent);</span>
+
+<span class="nc bnc" id="L45" title="All 2 branches missed.">            if (logConfig.getDatabase().isEnabled()) {</span>
+<span class="nc bnc" id="L46" title="All 2 branches missed.">                if (logConfig.getSlack().isEnabled()) {</span>
+<span class="nc" id="L47">                    errorLog.setAlertYn(&quot;Y&quot;);</span>
+                }
+<span class="nc" id="L49">                toDatabase(errorLog);</span>
+            }
+
+<span class="nc bnc" id="L52" title="All 2 branches missed.">            if (logConfig.getSlack().isEnabled()) {</span>
+<span class="nc" id="L53">                toSlack(errorLog);</span>
+            }
+        }
+<span class="nc" id="L56">    }</span>
+
+    private void toSlack(ErrorLog errorLog) {
+
+<span class="nc" id="L60">        SlackApi slackApi = new SlackApi(logConfig.getSlack().getWebHookUrl());</span>
+
+<span class="nc" id="L62">        List&lt;SlackField&gt; fields = new ArrayList&lt;&gt;();</span>
+
+<span class="nc" id="L64">        SlackField message = new SlackField();</span>
+<span class="nc" id="L65">        message.setTitle(&quot;에러내용&quot;);</span>
+<span class="nc" id="L66">        message.setValue(errorLog.getMessage());</span>
+<span class="nc" id="L67">        message.setShorten(false);</span>
+<span class="nc" id="L68">        fields.add(message);</span>
+
+<span class="nc" id="L70">        SlackField path = new SlackField();</span>
+<span class="nc" id="L71">        path.setTitle(&quot;요청 URL&quot;);</span>
+<span class="nc" id="L72">        path.setValue(errorLog.getPath());</span>
+<span class="nc" id="L73">        path.setShorten(false);</span>
+<span class="nc" id="L74">        fields.add(path);</span>
+
+<span class="nc" id="L76">        SlackField date = new SlackField();</span>
+<span class="nc" id="L77">        date.setTitle(&quot;발생시간&quot;);</span>
+<span class="nc" id="L78">        date.setValue(errorLog.getErrorDatetime().format(DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd HH:mm:ss&quot;)));</span>
+<span class="nc" id="L79">        date.setShorten(true);</span>
+<span class="nc" id="L80">        fields.add(date);</span>
+
+<span class="nc" id="L82">        SlackField profile = new SlackField();</span>
+<span class="nc" id="L83">        profile.setTitle(&quot;프로파일&quot;);</span>
+<span class="nc" id="L84">        profile.setValue(errorLog.getPhase());</span>
+<span class="nc" id="L85">        profile.setShorten(true);</span>
+<span class="nc" id="L86">        fields.add(profile);</span>
+
+<span class="nc" id="L88">        SlackField system = new SlackField();</span>
+<span class="nc" id="L89">        system.setTitle(&quot;시스템명&quot;);</span>
+<span class="nc" id="L90">        system.setValue(errorLog.getSystem());</span>
+<span class="nc" id="L91">        system.setShorten(true);</span>
+<span class="nc" id="L92">        fields.add(system);</span>
+
+<span class="nc" id="L94">        SlackField serverName = new SlackField();</span>
+<span class="nc" id="L95">        serverName.setTitle(&quot;서버명&quot;);</span>
+<span class="nc" id="L96">        serverName.setValue(errorLog.getServerName());</span>
+<span class="nc" id="L97">        serverName.setShorten(true);</span>
+<span class="nc" id="L98">        fields.add(serverName);</span>
+
+<span class="nc" id="L100">        SlackField hostName = new SlackField();</span>
+<span class="nc" id="L101">        hostName.setTitle(&quot;호스트명&quot;);</span>
+<span class="nc" id="L102">        hostName.setValue(errorLog.getHostName());</span>
+<span class="nc" id="L103">        hostName.setShorten(false);</span>
+<span class="nc" id="L104">        fields.add(hostName);</span>
+
+<span class="nc" id="L106">        SlackField userInformation = new SlackField();</span>
+<span class="nc" id="L107">        userInformation.setTitle(&quot;사용자 정보&quot;);</span>
+<span class="nc" id="L108">        userInformation.setValue(JsonUtils.toPrettyJson(errorLog.getUserInfo()));</span>
+<span class="nc" id="L109">        userInformation.setShorten(false);</span>
+<span class="nc" id="L110">        fields.add(userInformation);</span>
+
+<span class="nc" id="L112">        SlackField headerInformation = new SlackField();</span>
+<span class="nc" id="L113">        headerInformation.setTitle(&quot;Http Header 정보&quot;);</span>
+<span class="nc" id="L114">        headerInformation.setValue(JsonUtils.toPrettyJson(errorLog.getHeaderMap()));</span>
+<span class="nc" id="L115">        headerInformation.setShorten(false);</span>
+<span class="nc" id="L116">        fields.add(headerInformation);</span>
+
+<span class="nc" id="L118">        SlackField bodyInformation = new SlackField();</span>
+<span class="nc" id="L119">        bodyInformation.setTitle(&quot;Http Body 정보&quot;);</span>
+<span class="nc" id="L120">        bodyInformation.setValue(JsonUtils.toPrettyJson(errorLog.getParameterMap()));</span>
+<span class="nc" id="L121">        bodyInformation.setShorten(false);</span>
+<span class="nc" id="L122">        fields.add(bodyInformation);</span>
+
+<span class="nc" id="L124">        SlackField agentDetail = new SlackField();</span>
+<span class="nc" id="L125">        agentDetail.setTitle(&quot;사용자 환경정보&quot;);</span>
+<span class="nc" id="L126">        agentDetail.setValue(JsonUtils.toPrettyJson(errorLog.getAgentDetail()));</span>
+<span class="nc" id="L127">        agentDetail.setShorten(false);</span>
+<span class="nc" id="L128">        fields.add(agentDetail);</span>
+
+<span class="nc" id="L130">        String title = errorLog.getMessage();</span>
+
+<span class="nc bnc" id="L132" title="All 2 branches missed.">        if (logConfig.getDatabase().isEnabled()) {</span>
+<span class="nc" id="L133">            title = &quot;상세 로그 보기 / [&quot; + errorLog.getId() + &quot;] &quot;;</span>
+        }
+
+<span class="nc" id="L136">        SlackAttachment slackAttachment = new SlackAttachment();</span>
+<span class="nc" id="L137">        slackAttachment.setFallback(&quot;에러발생!! 확인요망&quot;);</span>
+<span class="nc" id="L138">        slackAttachment.setColor(&quot;danger&quot;);</span>
+<span class="nc" id="L139">        slackAttachment.setFields(fields);</span>
+<span class="nc" id="L140">        slackAttachment.setTitle(title);</span>
+<span class="nc" id="L141">        slackAttachment.setTitleLink(&quot;http://log.test.com&quot;);</span>
+<span class="nc" id="L142">        slackAttachment.setText(errorLog.getTrace());</span>
+
+<span class="nc" id="L144">        SlackMessage slackMessage = new SlackMessage(&quot;&quot;);</span>
+<span class="nc" id="L145">        slackMessage.setChannel(&quot;#&quot; + logConfig.getSlack().getChannel());</span>
+<span class="nc" id="L146">        slackMessage.setUsername(String.format(&quot;[%s] - ErrorReportBot&quot;, errorLog.getPhase()));</span>
+<span class="nc" id="L147">        slackMessage.setIcon(&quot;:exclamation:&quot;);</span>
+<span class="nc" id="L148">        slackMessage.setAttach(Collections.singletonList(slackAttachment));</span>
+
+<span class="nc" id="L150">        slackApi.call(slackMessage);</span>
+<span class="nc" id="L151">    }</span>
+
+    private void toDatabase(ErrorLog errorLog) {
+<span class="nc" id="L154">        errorLogService.save(errorLog);</span>
+<span class="nc" id="L155">    }</span>
+
+    public ErrorLog getErrorLog(ILoggingEvent loggingEvent) {
+<span class="nc bnc" id="L158" title="All 2 branches missed.">        if (loggingEvent.getLevel().isGreaterOrEqual(logConfig.getLevel())) {</span>
+<span class="nc" id="L159">            ErrorLog errorLog = new ErrorLog();</span>
+<span class="nc" id="L160">            errorLog.setPhase(&quot;alpha&quot;);</span>
+<span class="nc" id="L161">            errorLog.setSystem(&quot;testSystem&quot;);</span>
+<span class="nc" id="L162">            errorLog.setLoggerName(loggingEvent.getLoggerName());</span>
+<span class="nc" id="L163">            errorLog.setServerName(&quot;localhost&quot;);</span>
+<span class="nc" id="L164">            errorLog.setHostName(getHostName());</span>
+<span class="nc" id="L165">            errorLog.setPath(MDCUtil.get(MDCUtil.REQUEST_URI_MDC));</span>
+<span class="nc" id="L166">            errorLog.setMessage(loggingEvent.getFormattedMessage());</span>
+<span class="nc" id="L167">            errorLog.setHeaderMap(MDCUtil.get(MDCUtil.HEADER_MAP_MDC));</span>
+<span class="nc" id="L168">            errorLog.setParameterMap(MDCUtil.get(MDCUtil.PARAMETER_MAP_MDC));</span>
+<span class="nc" id="L169">            errorLog.setUserInfo(MDCUtil.get(MDCUtil.USER_INFO_MDC));</span>
+<span class="nc" id="L170">            errorLog.setAgentDetail(MDCUtil.get(MDCUtil.AGENT_DETAIL_MDC));</span>
+
+<span class="nc bnc" id="L172" title="All 2 branches missed.">            if (loggingEvent.getThrowableProxy() != null) {</span>
+<span class="nc" id="L173">                errorLog.setTrace(getStackTrace(loggingEvent.getThrowableProxy().getStackTraceElementProxyArray()));</span>
+            }
+
+<span class="nc" id="L176">            return errorLog;</span>
+        }
+
+<span class="nc" id="L179">        return null;</span>
+    }
+
+    public String getHostName() {
+        try {
+<span class="nc" id="L184">            return ContextUtil.getLocalHostName();</span>
+<span class="nc" id="L185">        } catch (Exception e) {</span>
+            // ignored
+        }
+<span class="nc" id="L188">        return null;</span>
+    }
+
+    public String getStackTrace(StackTraceElementProxy[] stackTraceElements) {
+<span class="nc bnc" id="L192" title="All 4 branches missed.">        if (stackTraceElements == null || stackTraceElements.length == 0) {</span>
+<span class="nc" id="L193">            return null;</span>
+        }
+
+<span class="nc" id="L196">        StringBuilder sb = new StringBuilder();</span>
+<span class="nc bnc" id="L197" title="All 2 branches missed.">        for (StackTraceElementProxy element : stackTraceElements) {</span>
+<span class="nc" id="L198">            sb.append(element.toString());</span>
+<span class="nc" id="L199">            sb.append(&quot;\n&quot;);</span>
+        }
+<span class="nc" id="L201">        return sb.toString();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
